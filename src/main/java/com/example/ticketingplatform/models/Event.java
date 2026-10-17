@@ -25,4 +25,28 @@ public class Event {
         this.dateTime = dateTime;
         this.endTime = endTime;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
 }
