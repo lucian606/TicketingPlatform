@@ -15,6 +15,6 @@ public class EventsExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorMessage> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        return ResponseEntity.badRequest().body(new ErrorMessage("Invalid request body: " + ex.getMessage()));
+        return ResponseEntity.badRequest().body(new ErrorMessage("Invalid request body"));
     }
 }
