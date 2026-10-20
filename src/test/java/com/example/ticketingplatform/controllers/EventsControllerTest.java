@@ -82,6 +82,17 @@ class EventsControllerTest {
     }
 
     @Test
+    void getEventsReturnsEmptyArrayWhenThereAreNoEvents() throws Exception {
+        when(eventsService.getEvents()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/events"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+
+        verify(eventsService).getEvents();
+    }
+
+    @Test
     void createEventReturnsBadRequestForInvalidEvent() throws Exception {
         when(eventsService.createEvent(any(EventRequestBody.class)))
                 .thenThrow(new InvalidEventException("Event name must not be empty."));
