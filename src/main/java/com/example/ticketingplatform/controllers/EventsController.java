@@ -7,6 +7,8 @@ import com.example.ticketingplatform.services.EventsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/events")
 public class EventsController {
@@ -17,7 +19,7 @@ public class EventsController {
         this.eventsService = eventsService;
     }
 
-    @GetMapping
+    @GetMapping("/hello")
     public String hello() {
         return "Hello from EventsController!";
     }
@@ -28,6 +30,11 @@ public class EventsController {
             @RequestBody EventRequestBody eventRequestBody
     ) throws InvalidEventException {
         return eventsService.createEvent(eventRequestBody);
+    }
+
+    @GetMapping
+    public List<Event> getEvents() {
+        return eventsService.getEvents();
     }
 
 }

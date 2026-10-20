@@ -9,7 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,7 +44,7 @@ class EventsApplicationIntegrationTest {
                 .andExpect(jsonPath("$.description").value("Live music"))
                 .andExpect(jsonPath("$.venue").value("Main Hall"));
 
-        assertTrue(eventsService.getAllEvents().stream()
+        assertTrue(eventsService.getEvents().stream()
                 .anyMatch(event -> event.getName().equals("Integration test concert")));
     }
 
@@ -60,5 +63,26 @@ class EventsApplicationIntegrationTest {
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Event name must not be empty."));
+    }
+
+    @Test
+    void getEventsReturnsEventsCreatedThroughTheApplication() throws Exception {
+        mockMvc.perform(post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Event listed by integration test",
+                                  "description": "A test event",
+                                  "venue": "Test Hall",
+                                  "dateTime": "2026-11-10T18:00:00",
+                                  "endTime": "2026-11-10T20:00:00"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/events"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$..name", hasItem("Event listed by integration test")));
     }
 }

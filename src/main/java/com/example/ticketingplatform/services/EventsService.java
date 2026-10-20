@@ -12,7 +12,7 @@ import java.util.List;
 public class EventsService {
     private final List<Event> events = new ArrayList<>();
 
-    public List<Event> getAllEvents() {
+    public List<Event> getEvents() {
         return List.copyOf(events);
     }
 

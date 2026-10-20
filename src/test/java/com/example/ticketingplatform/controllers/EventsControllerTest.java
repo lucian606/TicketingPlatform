@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -33,13 +34,6 @@ class EventsControllerTest {
                 .standaloneSetup(new EventsController(eventsService))
                 .setControllerAdvice(new EventsExceptionHandler())
                 .build();
-    }
-
-    @Test
-    void getEventsReturnsGreeting() throws Exception {
-        mockMvc.perform(get("/api/events"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Hello from EventsController!"));
     }
 
     @Test
@@ -69,6 +63,22 @@ class EventsControllerTest {
         verify(eventsService).createEvent(new EventRequestBody(
                 "Concert", "Live music", "Main Hall", start, end
         ));
+    }
+
+    @Test
+    void getEventsReturnsEventsFromService() throws Exception {
+        LocalDateTime start = LocalDateTime.of(2026, 11, 10, 18, 0);
+        Event event = new Event("Concert", "Live music", "Main Hall", start, start.plusHours(2));
+        when(eventsService.getEvents()).thenReturn(List.of(event));
+
+        mockMvc.perform(get("/api/events"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(event.getId().toString()))
+                .andExpect(jsonPath("$[0].name").value("Concert"))
+                .andExpect(jsonPath("$[0].description").value("Live music"))
+                .andExpect(jsonPath("$[0].venue").value("Main Hall"));
+
+        verify(eventsService).getEvents();
     }
 
     @Test

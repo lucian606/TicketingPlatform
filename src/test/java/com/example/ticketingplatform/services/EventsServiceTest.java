@@ -26,7 +26,7 @@ class EventsServiceTest {
 
     @Test
     void getAllEventsIsEmptyInitially() {
-        assertTrue(eventsService.getAllEvents().isEmpty());
+        assertTrue(eventsService.getEvents().isEmpty());
     }
 
     @Test
@@ -38,7 +38,7 @@ class EventsServiceTest {
         assertEquals("Main Hall", created.getVenue());
         assertEquals(start, created.getDateTime());
         assertEquals(end, created.getEndTime());
-        assertEquals(List.of(created), eventsService.getAllEvents());
+        assertEquals(List.of(created), eventsService.getEvents());
         assertNotNull(created.getId());
     }
 
@@ -105,6 +105,6 @@ class EventsServiceTest {
         );
 
         assertEquals(expectedMessage, exception.getMessage());
-        assertTrue(eventsService.getAllEvents().isEmpty());
+        assertTrue(eventsService.getEvents().isEmpty());
     }
 }
